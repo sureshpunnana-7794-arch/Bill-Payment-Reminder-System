@@ -358,6 +358,8 @@ export function App() {
             onViewReceipt={(bill) => setReceiptBill(bill)}
             onTestWhatsApp={handleOpenWhatsAppTest}
             onOpenAddModal={() => setIsAddBillModalOpen(true)}
+            onAddBill={handleAddBill}
+            connectedPhone={currentPhone}
           />
         ) : currentView === 'analytics' ? (
           <AnalyticsView bills={bills} />

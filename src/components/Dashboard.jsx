@@ -31,6 +31,7 @@ import {
 import { CATEGORIES } from '../data/mockBills';
 import { CategoryIcon } from './CategoryIcon';
 import { BillCard } from './BillCard';
+import { AddBillForm } from './AddBillForm';
 
 export const Dashboard = ({
   bills,
@@ -41,7 +42,9 @@ export const Dashboard = ({
   onTogglePaidStatus,
   onViewReceipt,
   onTestWhatsApp,
-  onOpenAddModal
+  onOpenAddModal,
+  onAddBill,
+  connectedPhone
 }) => {
   const currentDate = useMemo(() => new Date(), []);
   const currentYear = currentDate.getFullYear();
@@ -56,6 +59,7 @@ export const Dashboard = ({
   const [activeTab, setActiveTab] = useState('current-month'); // 'current-month' | 'all' | 'pending' | 'paid' | 'urgent'
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'table'
+  const [showAddForm, setShowAddForm] = useState(false);
 
   // Is viewing real current month?
   const isSelectedCurrentMonth = selectedYear === currentYear && selectedMonth === currentMonth;
@@ -483,14 +487,33 @@ export const Dashboard = ({
 
           {/* Add Bill Button */}
           <button
-            onClick={onOpenAddModal}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white text-xs font-semibold shadow-lg shadow-indigo-500/20 transition cursor-pointer whitespace-nowrap shrink-0"
+            onClick={() => setShowAddForm(!showAddForm)}
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold shadow-lg transition cursor-pointer whitespace-nowrap shrink-0 ${
+              showAddForm
+                ? 'bg-slate-800 text-white border border-slate-700'
+                : 'bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white shadow-indigo-500/20'
+            }`}
           >
-            <Plus className="w-4 h-4" />
-            <span>Add Bill</span>
+            <Plus className={`w-4 h-4 transition-transform ${showAddForm ? 'rotate-45' : ''}`} />
+            <span>{showAddForm ? 'Close Form' : 'Add Bill'}</span>
           </button>
         </div>
       </div>
+
+      {/* Embedded Add Bill Form (name, due date, amount & saves to localStorage) */}
+      {showAddForm && (
+        <div className="animate-fadeIn">
+          <AddBillForm
+            isInline={true}
+            connectedPhone={connectedPhone}
+            onAddBill={(newBill) => {
+              onAddBill?.(newBill);
+              setShowAddForm(false);
+            }}
+            onClose={() => setShowAddForm(false)}
+          />
+        </div>
+      )}
 
       {/* Main Bills Presentation: Grid or High-Density Table */}
       {filteredBills.length === 0 ? (
@@ -514,7 +537,7 @@ export const Dashboard = ({
               </button>
             )}
             <button
-              onClick={onOpenAddModal}
+              onClick={() => setShowAddForm(true)}
               className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow transition cursor-pointer flex items-center gap-1.5"
             >
               <Plus className="w-4 h-4" />
