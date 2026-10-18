@@ -1,67 +1,183 @@
-# ⚡ PayPulse | Phone-Connected Smart Bill Payment & Reminder System
+# ⚡ PayPulse | Smart Bill Payment & Reminder System
 
-A modern, stylish, full-featured web application designed to connect to your phone number and automatically track, remind, and manage all your utility bills with instant payment settlement.
-
-![PayPulse Application](https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=1200&auto=format&fit=crop&q=80)
+PayPulse is a modern, responsive web application for tracking, reminding, and paying utility bills. It connects to your phone profile, manages scheduled payments, calculates monthly obligations, and automates multi-channel notifications (WhatsApp, SMS, Push, and Calendar).
 
 ---
 
-## 🚀 Key Features
+## 🚀 How to Run the Application
 
-### 1. 📱 Mobile Number Connection & Bill Synchronization
-- **One-Click & OTP Phone Connection:** Connect your actual 10-digit mobile number or switch between pre-loaded demo profiles:
-  - **Rahul Sharma** (`+91 98765 43210`): Electricity, Broadband, Credit Card, Mobile, Gas, Water.
-  - **Priya Patel** (`+91 98123 45678`): Tech office electricity, Gigabit fiber, Business card.
-  - **Vikram Verma** (`+91 91234 56789`): House rent, DTH 4K pack.
-  - **Custom Mobile Number**: Enter any phone number to link your personal bills.
-- **Persistent Storage:** All added bills, payment records, and reminder preferences are saved in browser `localStorage`.
+Follow these steps to run the application on your local machine:
 
-### 2. 🔔 Intelligent Reminder Engine
-- **Urgent Reminder Banner:** Automatically detects upcoming bills due today, tomorrow, overdue, or within 3 days.
-- **Dynamic Urgency Badges:** Real-time countdowns (`Due Today!`, `Due Tomorrow`, `Due in 4 days`, `Overdue by 2 days`, `Paid`).
-- **Omnichannel Reminder Channels:**
-  - 💬 **Interactive WhatsApp Alerts:** Previews authentic WhatsApp chat notifications with instant "Pay Now" links.
-  - 📲 **SMS Carrier Alerts:** SMS notification triggers.
-  - 🔔 **In-App & Browser Push:** System desktop / mobile push notification permissions and alerts.
-  - 📅 **One-Click iCalendar Sync (.ics):** Download standard `.ics` calendar events directly into Google Calendar, Apple Calendar, or Outlook.
-- **Customizable Reminder Lead Times:** Trigger reminders 7 days before, 3 days before, 1 day before, and on the due date.
+### 1. Prerequisites
+Make sure you have **Node.js** and **npm** installed on your system:
+- **Node.js**: v18.0.0 or higher (v20+ or v22 recommended)
+- **npm**: v9.0.0 or higher
 
-### 3. 💳 BBPS Multi-Channel Payment Gateway Simulator
-- **Unified Payment Modes:**
-  - ⚡ **UPI & QR:** Google Pay, PhonePe, Paytm, CRED UPI, or custom UPI ID.
-  - 💳 **Credit / Debit Cards:** Interactive 3D credit card display with live cardholder and expiry rendering.
-  - 🏦 **Net Banking:** Top banks (HDFC, ICICI, SBI, Axis, Kotak, PNB).
-- **Celebratory Confirmation:** Integrated `canvas-confetti` bursts on successful payment.
-- **Official E-Receipt / Tax Invoice:** Generates downloadable and printable BBPS transaction invoices with transaction IDs.
-
-### 4. 📊 Financial Analytics & Spend Breakdown
-- **Utility Category Distribution:** Interactive visual progress breakdown (Electricity, Mobile, Broadband, Gas, Water, Rent, Cards).
-- **Penalty Shield Rating:** Displays late fees saved and timely payment compliance score.
-- **Search, Filter & Sorting:** Real-time search by provider or consumer ID, filter by category or urgency status, and sort by due date or amount.
-
----
-
-## 🛠️ Tech Stack
-
-- **Framework:** React 19 + Vite 8
-- **Styling:** Tailwind CSS + Glassmorphism aesthetic
-- **Icons:** Lucide React
-- **Animations:** Canvas-Confetti, CSS pulse keyframes, backdrop blur
-- **Data Persistence:** LocalStorage API
-
----
-
-## 💻 How to Run Locally
-
+You can verify your versions by running:
 ```bash
-# 1. Navigate to the client directory
-cd client
+node -v
+npm -v
+```
 
-# 2. Install dependencies (if not already installed)
+---
+
+### 2. Clone the Repository
+```bash
+git clone https://github.com/sureshpunnana-7794-arch/Bill-Payment-Reminder-System.git
+cd Bill-Payment-Reminder-System
+```
+
+---
+
+### 3. Install Dependencies
+Install all required project packages:
+```bash
 npm install
+```
 
-# 3. Start development server
+---
+
+### 4. Start Development Server
+Run the local Vite development server:
+```bash
 npm run dev
 ```
 
-Then open **`http://localhost:5173`** in your browser.
+Once started, open your browser and navigate to:
+```
+http://localhost:3000
+```
+*(The dev server is configured to bind to `0.0.0.0:3000`)*
+
+---
+
+### 5. Build for Production
+To generate an optimized production build:
+```bash
+npm run build
+```
+The compiled static assets will be output to the `dist/` folder.
+
+---
+
+### 6. Preview Production Build
+To preview the production build locally before deploying:
+```bash
+npm run preview
+```
+This serves the contents of `dist/` on `http://localhost:3000`.
+
+---
+
+### 7. Run Code Quality Checks (Lint)
+To run the high-speed Oxlint linter:
+```bash
+npm run lint
+```
+
+---
+
+## 📋 Available npm Scripts
+
+| Command | Description |
+| :--- | :--- |
+| `npm run dev` | Starts Vite development server at `http://localhost:3000` with hot reloading |
+| `npm run build` | Compiles and bundles production-ready assets into `/dist` |
+| `npm run preview` | Previews the production build locally on port 3000 |
+| `npm run lint` | Runs `oxlint` to analyze codebase for syntax issues and code quality |
+
+---
+
+## 🌟 Key Application Features
+
+### 1. 📊 Monthly Bill Due Dashboard
+- **Current Month Total Due Calculation:** Automatically computes the net sum of all pending bills due in the current month.
+- **Interactive Paid / Pending Checkbox & Toggle:** Click to mark any bill as **Paid** or **Pending**. Marking a bill as Paid instantly updates and excludes it from the current month total due calculation.
+- **Month Switcher:** Navigate backward and forward across billing months to review archived cycles or upcoming obligations.
+- **Dual Display Modes:** Switch between a responsive Card Grid and a high-density tabular Ledger view.
+
+### 2. 📝 Add New Bill Form with LocalStorage Persistence
+- **Input Fields:** Enter Bill Name, Due Date, and Amount.
+- **Category Selection:** Assign categories like **Utilities**, **Rent**, **Subscriptions**, **Electricity**, **Broadband**, **Credit Cards**, and more.
+- **Smart Category Auto-Detection:** Automatically infers category as you type the provider or bill name (e.g., typing "Netflix" sets Subscriptions, "BESCOM" sets Utilities, "Rent" sets Rent).
+- **Instant Persistence:** New bills are saved directly to browser `localStorage` under both generic keys (`saved_bills`) and phone-specific keys (`paypulse_bills_<phone>`).
+- **Flexible Access:** Available both inline in the Dashboard and via the top navigation "+ Link Bill" modal.
+
+### 3. 🏷️ Color-Coded Category Badges
+- Color-coded badges with contextual icons for every category:
+  - ⚡ **Utilities & Electricity** (Amber)
+  - 🏠 **Rent** (Emerald)
+  - ✨ **Subscriptions** (Purple)
+  - 🌐 **Broadband / Wi-Fi** (Sky Blue)
+  - 📱 **Mobile Postpaid** (Teal)
+  - 💳 **Credit Cards** (Indigo)
+  - 💧 **Water & Gas** (Cyan / Rose)
+- Displayed across dashboard cards, table ledger rows, and forms.
+
+### 4. 📱 Mobile Number Profiles & Data Sync
+- Pre-loaded with demo profiles (**Rahul Sharma**, **Priya Patel**, **Vikram Verma**) to explore with real sample utility accounts.
+- **Custom Phone Connect:** Connect any 10-digit mobile number with simulated OTP verification.
+- All bills, preferences, and payment transactions persist across page reloads.
+
+### 5. 🔔 Smart Reminder Engine & Channels
+- **Urgent Reminder Banner:** Flags bills that are overdue, due today, or due in the next 3 days.
+- **WhatsApp Notification Simulator:** Live interactive preview of real-time WhatsApp alert templates with "Pay Now" links.
+- **Calendar Export (.ics):** Download standard `.ics` calendar events directly into Google Calendar, Apple Calendar, or Microsoft Outlook.
+- **Notification Drawer:** Activity log recording bill linkages, payment confirmations, and reminder triggers.
+
+### 6. 💳 Payment Gateway Simulation & E-Receipts
+- Simulated payment checkout supporting **UPI / QR** (GPay, PhonePe, Paytm, CRED), **Cards**, and **Net Banking**.
+- Celebratory confetti animation upon payment success.
+- Instant official BBPS receipt generation with printable and downloadable invoice layout.
+
+---
+
+## 📂 Project Structure
+
+```
+├── index.html                 # HTML entry point with meta tags & Google fonts
+├── package.json               # Dependencies and build scripts
+├── vite.config.js             # Vite 8 configuration (host 0.0.0.0, port 3000)
+├── metadata.json              # Applet metadata and capabilities
+├── .env.example               # Environment variables template
+├── public/                    # Static assets & icons
+└── src/
+    ├── main.jsx               # React DOM entry point
+    ├── App.jsx                # Main application container & view manager
+    ├── index.css              # Global styles & Tailwind CSS directives
+    ├── components/
+    │   ├── Dashboard.jsx           # Monthly Bill Due Dashboard & ledger view
+    │   ├── AddBillForm.jsx         # Add bill form with validation & localStorage
+    │   ├── AddBillModal.jsx        # Modal dialog wrapper for AddBillForm
+    │   ├── CategoryBadge.jsx       # Color-coded category badge component
+    │   ├── CategoryIcon.jsx        # Category icon mapper
+    │   ├── BillCard.jsx            # Interactive bill card with Paid toggle
+    │   ├── BillList.jsx            # Searchable, filterable list of bills
+    │   ├── Header.jsx              # Navigation header and phone profile pill
+    │   ├── PaymentModal.jsx        # Simulated payment checkout flow
+    │   ├── ReceiptModal.jsx        # Printable BBPS invoice receipt
+    │   ├── ReminderModal.jsx       # Multi-channel reminder configuration
+    │   ├── UrgentReminderBanner.jsx# Alert banner for overdue / urgent bills
+    │   ├── WhatsAppPreviewModal.jsx# WhatsApp notification simulation modal
+    │   ├── NotificationDrawer.jsx  # Slide-out notification activity drawer
+    │   ├── StatsOverview.jsx       # Overview metrics cards
+    │   ├── AnalyticsView.jsx       # Category spend charts and penalty rating
+    │   └── Toast.jsx               # Toast notification system
+    ├── data/
+    │   └── mockBills.js       # Initial seed data and demo user profiles
+    └── utils/
+        ├── helpers.js         # Formatting, date calculations, monthly due logic
+        └── calendar.js        # .ics calendar event file generator
+```
+
+---
+
+## 🛠️ Technology Stack
+
+- **Frontend Library:** [React 19](https://react.dev/)
+- **Build Tool:** [Vite 8](https://vitejs.dev/)
+- **CSS Framework:** [Tailwind CSS v4](https://tailwindcss.com/)
+- **Icons:** [Lucide React](https://lucide.dev/)
+- **Animations & Effects:** `canvas-confetti`
+- **Linter:** `oxlint`
+- **Storage:** HTML5 LocalStorage API (zero external database setup required)
