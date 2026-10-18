@@ -3,14 +3,11 @@ import {
   Smartphone,
   Bell,
   Plus,
-  ShieldCheck,
   ChevronDown,
-  Sparkles,
   Zap,
   BarChart3,
   Layers,
-  LayoutDashboard,
-  RefreshCw
+  LayoutDashboard
 } from 'lucide-react';
 
 export const Header = ({

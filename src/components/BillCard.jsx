@@ -21,6 +21,7 @@ import {
 import { formatCurrency, formatDate, getUrgencyInfo } from '../utils/helpers';
 import { downloadBillCalendarReminder } from '../utils/calendar';
 import { CategoryIcon } from './CategoryIcon';
+import { CategoryBadge } from './CategoryBadge';
 
 export const BillCard = ({
   bill,
@@ -74,8 +75,8 @@ export const BillCard = ({
               <CategoryIcon category={bill.category} className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                {bill.category}
+              <div className="mb-1">
+                <CategoryBadge category={bill.category} size="sm" />
               </div>
               <h4 className="text-base font-bold text-white tracking-tight line-clamp-1" title={bill.providerName}>
                 {bill.providerName}

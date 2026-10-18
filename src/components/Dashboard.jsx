@@ -30,6 +30,7 @@ import {
 } from '../utils/helpers';
 import { CATEGORIES } from '../data/mockBills';
 import { CategoryIcon } from './CategoryIcon';
+import { CategoryBadge } from './CategoryBadge';
 import { BillCard } from './BillCard';
 import { AddBillForm } from './AddBillForm';
 
@@ -86,6 +87,29 @@ export const Dashboard = ({
       totalPaidAmount,
       urgentCount
     };
+  }, [bills]);
+
+  // Category breakdown with counts and totals
+  const categorySummary = useMemo(() => {
+    const map = {};
+    bills.forEach((b) => {
+      const cat = b.category || 'Other';
+      if (!map[cat]) {
+        map[cat] = { count: 0, unpaidAmount: 0, paidAmount: 0, totalAmount: 0 };
+      }
+      map[cat].count += 1;
+      const amt = Number(b.amount || 0);
+      map[cat].totalAmount += amt;
+      if (b.isPaid) {
+        map[cat].paidAmount += amt;
+      } else {
+        map[cat].unpaidAmount += amt;
+      }
+    });
+    return Object.entries(map).map(([category, stats]) => ({
+      category,
+      ...stats
+    }));
   }, [bills]);
 
   // Navigation handlers for month switching
@@ -354,6 +378,47 @@ export const Dashboard = ({
             </div>
           </div>
         )}
+
+        {/* Color-Coded Category Breakdown Strip */}
+        <div className="mt-6 pt-5 border-t border-slate-800/80">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+              Categories & Breakdown
+            </span>
+            {selectedCategory !== 'all' && (
+              <button
+                type="button"
+                onClick={() => setSelectedCategory('all')}
+                className="text-[11px] text-indigo-400 hover:text-indigo-300 font-semibold cursor-pointer"
+              >
+                Clear Filter (Show All)
+              </button>
+            )}
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            {categorySummary.map((item) => (
+              <button
+                key={item.category}
+                type="button"
+                onClick={() => setSelectedCategory(selectedCategory === item.category ? 'all' : item.category)}
+                className={`flex items-center gap-2 p-1.5 pr-3 rounded-2xl border transition cursor-pointer ${
+                  selectedCategory === item.category
+                    ? 'ring-2 ring-indigo-500 bg-slate-800/90 border-indigo-500/50 shadow-md'
+                    : 'bg-slate-950/60 border-slate-800/80 hover:bg-slate-800/50'
+                }`}
+                title={`Filter by ${item.category}`}
+              >
+                <CategoryBadge category={item.category} size="sm" />
+                <span className="text-[11px] font-mono font-bold text-white tabular-nums">
+                  {formatCurrency(item.unpaidAmount > 0 ? item.unpaidAmount : item.totalAmount)}
+                </span>
+                <span className="text-[10px] text-slate-400">
+                  ({item.count})
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Dynamic Calculation Clarification Banner */}
@@ -629,13 +694,10 @@ export const Dashboard = ({
                                 </span>
                               )}
                             </div>
-                            <div className="text-[11px] text-slate-400 flex items-center gap-1.5">
-                              <span>{bill.category}</span>
+                            <div className="mt-1 flex items-center gap-1.5">
+                              <CategoryBadge category={bill.category} size="sm" />
                               {bill.nickname && (
-                                <>
-                                  <span>&bull;</span>
-                                  <span className="text-slate-300">{bill.nickname}</span>
-                                </>
+                                <span className="text-[11px] text-slate-400">&bull; {bill.nickname}</span>
                               )}
                             </div>
                           </div>

@@ -8,12 +8,10 @@ import {
   Lock,
   ArrowRight,
   RefreshCw,
-  X,
-  Sparkles,
-  Zap
+  X
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { formatCurrency, formatDate } from '../utils/helpers';
+import { formatCurrency } from '../utils/helpers';
 import { CategoryIcon } from './CategoryIcon';
 
 export const PaymentModal = ({
@@ -24,11 +22,7 @@ export const PaymentModal = ({
 }) => {
   const [paymentMethod, setPaymentMethod] = useState('upi'); // 'upi' | 'card' | 'netbanking'
   const [selectedUpiApp, setSelectedUpiApp] = useState('gpay');
-  const [upiId, setUpiId] = useState('');
   const [cardNumber, setCardNumber] = useState('4242 •••• •••• 9812');
-  const [cardHolder, setCardHolder] = useState('SURESH KUMAR');
-  const [expiry, setExpiry] = useState('08/29');
-  const [cvv, setCvv] = useState('382');
   const [selectedBank, setSelectedBank] = useState('HDFC Bank');
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -41,7 +35,7 @@ export const PaymentModal = ({
         spread: 70,
         origin: { y: 0.6 }
       });
-    } catch (e) {
+    } catch {
       // safe fallback
     }
   };

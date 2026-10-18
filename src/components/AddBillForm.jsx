@@ -8,6 +8,7 @@ import {
   Smartphone
 } from 'lucide-react';
 import { CATEGORIES } from '../data/mockBills';
+import { CategoryBadge } from './CategoryBadge';
 
 // Utility helper to persist newly added bill to multiple localStorage keys
 export const saveBillToLocalStorage = (newBill, phone = '9876543210') => {
@@ -50,8 +51,8 @@ export const AddBillForm = ({
   const [dueDate, setDueDate] = useState(getDefaultDueDate());
   const [amount, setAmount] = useState('');
   
-  // Optional helpful fields with intelligent defaults
-  const [category, setCategory] = useState('Electricity');
+  // Form fields: Bill Name, Due Date, Amount, and Category (as requested)
+  const [category, setCategory] = useState('Utilities');
   const [consumerId, setConsumerId] = useState('');
   const [lateFee, setLateFee] = useState('100');
 
@@ -60,7 +61,7 @@ export const AddBillForm = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
 
-  // Auto-detect category based on name keywords if user hasn't changed it
+  // Auto-detect category based on name keywords
   const handleNameChange = (e) => {
     const val = e.target.value;
     setBillName(val);
@@ -69,20 +70,25 @@ export const AddBillForm = ({
     }
 
     const lower = val.toLowerCase();
-    if (lower.includes('wifi') || lower.includes('broadband') || lower.includes('fiber') || lower.includes('internet')) {
-      setCategory('Broadband');
-    } else if (lower.includes('electr') || lower.includes('power') || lower.includes('bescom')) {
-      setCategory('Electricity');
-    } else if (lower.includes('card') || lower.includes('credit') || lower.includes('hdfc') || lower.includes('sbi')) {
-      setCategory('CreditCard');
-    } else if (lower.includes('water') || lower.includes('jal') || lower.includes('utility')) {
-      setCategory('Water');
-    } else if (lower.includes('gas') || lower.includes('lpg') || lower.includes('indane') || lower.includes('cylinder')) {
-      setCategory('PipedGas');
-    } else if (lower.includes('mobile') || lower.includes('phone') || lower.includes('airtel') || lower.includes('jio')) {
-      setCategory('Mobile');
-    } else if (lower.includes('rent') || lower.includes('house') || lower.includes('flat')) {
+    if (lower.includes('rent') || lower.includes('lease') || lower.includes('apartment') || lower.includes('flat')) {
       setCategory('Rent');
+    } else if (
+      lower.includes('subscri') || lower.includes('netflix') || lower.includes('spotify') ||
+      lower.includes('prime') || lower.includes('broadband') || lower.includes('wifi') ||
+      lower.includes('fiber') || lower.includes('gym') || lower.includes('software') ||
+      lower.includes('dth') || lower.includes('cable')
+    ) {
+      setCategory('Subscriptions');
+    } else if (
+      lower.includes('utilit') || lower.includes('electr') || lower.includes('power') ||
+      lower.includes('bescom') || lower.includes('water') || lower.includes('gas') ||
+      lower.includes('lpg') || lower.includes('pipeline')
+    ) {
+      setCategory('Utilities');
+    } else if (lower.includes('card') || lower.includes('credit') || lower.includes('bank') || lower.includes('loan')) {
+      setCategory('CreditCard');
+    } else if (lower.includes('mobile') || lower.includes('phone') || lower.includes('postpaid') || lower.includes('prepaid')) {
+      setCategory('Mobile');
     }
   };
 
@@ -285,40 +291,70 @@ export const AddBillForm = ({
           </div>
         </div>
 
-        {/* Secondary Details: Category & Consumer ID */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
-          {/* Category Dropdown */}
-          <div>
-            <label className="block text-xs font-semibold text-slate-400 mb-1.5">
-              Category
+        {/* Field 4: Category Field with Color-Coded Badges */}
+        <div>
+          <div className="flex items-center justify-between mb-2">
+            <label className="block text-xs font-semibold text-slate-300">
+              Bill Category <span className="text-rose-400">*</span>
             </label>
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-indigo-500 transition cursor-pointer"
-            >
-              {CATEGORIES.filter((c) => c.id !== 'all').map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
+            <div className="flex items-center gap-1.5 text-xs">
+              <span className="text-[11px] text-slate-400">Preview:</span>
+              <CategoryBadge category={category} size="sm" />
+            </div>
           </div>
 
-          {/* Consumer/Account ID (Optional) */}
-          <div>
-            <label className="block text-xs font-semibold text-slate-400 mb-1.5 flex items-center justify-between">
-              <span>Account / Consumer #</span>
-              <span className="text-[10px] text-slate-500 font-normal">Optional</span>
-            </label>
-            <input
-              type="text"
-              value={consumerId}
-              onChange={(e) => setConsumerId(e.target.value)}
-              placeholder="e.g. CA-90283741"
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white font-mono placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition"
-            />
+          {/* Quick Category Buttons for key categories */}
+          <div className="flex flex-wrap items-center gap-2 mb-2.5">
+            {[
+              { id: 'Utilities', label: 'Utilities' },
+              { id: 'Rent', label: 'Rent' },
+              { id: 'Subscriptions', label: 'Subscriptions' },
+              { id: 'Electricity', label: 'Electricity' },
+              { id: 'Broadband', label: 'Broadband' },
+              { id: 'CreditCard', label: 'Card' }
+            ].map((catItem) => (
+              <button
+                type="button"
+                key={catItem.id}
+                onClick={() => setCategory(catItem.id)}
+                className={`transition cursor-pointer ${
+                  category === catItem.id
+                    ? 'ring-2 ring-indigo-500 scale-105'
+                    : 'opacity-70 hover:opacity-100'
+                }`}
+              >
+                <CategoryBadge category={catItem.id} size="sm" />
+              </button>
+            ))}
           </div>
+
+          {/* Full Category Dropdown */}
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-indigo-500 transition cursor-pointer"
+          >
+            {CATEGORIES.filter((c) => c.id !== 'all').map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Consumer/Account ID (Optional) */}
+        <div>
+          <label className="block text-xs font-semibold text-slate-400 mb-1.5 flex items-center justify-between">
+            <span>Account / Consumer #</span>
+            <span className="text-[10px] text-slate-500 font-normal">Optional</span>
+          </label>
+          <input
+            type="text"
+            value={consumerId}
+            onChange={(e) => setConsumerId(e.target.value)}
+            placeholder="e.g. CA-90283741 or ACC-54321"
+            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white font-mono placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition"
+          />
         </div>
 
         {/* Form Actions */}
