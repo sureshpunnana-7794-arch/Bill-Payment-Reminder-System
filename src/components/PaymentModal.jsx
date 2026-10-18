@@ -22,8 +22,6 @@ export const PaymentModal = ({
   bill,
   onPaymentSuccess
 }) => {
-  if (!isOpen || !bill) return null;
-
   const [paymentMethod, setPaymentMethod] = useState('upi'); // 'upi' | 'card' | 'netbanking'
   const [selectedUpiApp, setSelectedUpiApp] = useState('gpay');
   const [upiId, setUpiId] = useState('');
@@ -33,6 +31,8 @@ export const PaymentModal = ({
   const [cvv, setCvv] = useState('382');
   const [selectedBank, setSelectedBank] = useState('HDFC Bank');
   const [isProcessing, setIsProcessing] = useState(false);
+
+  if (!isOpen || !bill) return null;
 
   const triggerConfetti = () => {
     try {

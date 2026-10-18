@@ -9,14 +9,14 @@ export const PhoneConnectModal = ({
   onConnectPhone,
   onSelectPreset
 }) => {
-  if (!isOpen) return null;
-
   const [step, setStep] = useState('input'); // 'input' | 'otp'
   const [phoneNumber, setPhoneNumber] = useState('');
   const [otp, setOtp] = useState(['', '', '', '']);
   const [name, setName] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
   const [error, setError] = useState('');
+
+  if (!isOpen) return null;
 
   const handleSendOtp = (e) => {
     e.preventDefault();

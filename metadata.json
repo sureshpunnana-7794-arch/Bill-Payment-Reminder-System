@@ -1,0 +1,8 @@
+{
+  "name": "PayPulse - Smart Bill Payment & Reminders",
+  "description": "Phone-connected smart utility bill tracking, payment settlement, and multi-channel reminder alerts.",
+  "requestFeedback": false,
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

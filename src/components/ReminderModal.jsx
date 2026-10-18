@@ -24,13 +24,11 @@ export const ReminderModal = ({
   onUpdateBillReminders,
   onTriggerTestNotification
 }) => {
-  if (!isOpen || !bill) return null;
-
-  const [autoRemind, setAutoRemind] = useState(bill.autoRemind ?? true);
+  const [autoRemind, setAutoRemind] = useState(bill?.autoRemind ?? true);
   const [channels, setChannels] = useState({
-    whatsapp: bill.reminderChannels?.whatsapp ?? true,
-    sms: bill.reminderChannels?.sms ?? true,
-    push: bill.reminderChannels?.push ?? true
+    whatsapp: bill?.reminderChannels?.whatsapp ?? true,
+    sms: bill?.reminderChannels?.sms ?? true,
+    push: bill?.reminderChannels?.push ?? true
   });
   const [schedule, setSchedule] = useState({
     sevenDays: true,
@@ -39,6 +37,8 @@ export const ReminderModal = ({
     dueDay: true
   });
   const [testSent, setTestSent] = useState(false);
+
+  if (!isOpen || !bill) return null;
 
   const urgency = getUrgencyInfo(bill.dueDate, bill.isPaid);
 

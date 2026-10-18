@@ -21,8 +21,6 @@ export const AddBillModal = ({
   connectedPhone,
   onAddBill
 }) => {
-  if (!isOpen) return null;
-
   const defaultCategory = 'Electricity';
   const [category, setCategory] = useState(defaultCategory);
   const [providerName, setProviderName] = useState(POPULAR_PROVIDERS[defaultCategory][0] || '');
@@ -45,6 +43,8 @@ export const AddBillModal = ({
     push: true
   });
   const [error, setError] = useState('');
+
+  if (!isOpen) return null;
 
   const handleCategoryChange = (catId) => {
     setCategory(catId);
