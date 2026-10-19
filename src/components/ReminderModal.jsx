@@ -3,15 +3,10 @@ import {
   Bell,
   MessageSquare,
   Smartphone,
-  Calendar,
-  Send,
   CheckCircle2,
-  Clock,
   Sparkles,
   CalendarPlus,
-  AlertTriangle,
   X,
-  Volume2
 } from 'lucide-react';
 import { formatCurrency, formatDate, getUrgencyInfo } from '../utils/helpers';
 import { downloadBillCalendarReminder } from '../utils/calendar';
@@ -60,19 +55,6 @@ export const ReminderModal = ({
     setTimeout(() => setTestSent(false), 3000);
   };
 
-  const handleBrowserPush = () => {
-    if ('Notification' in window) {
-      Notification.requestPermission().then((permission) => {
-        if (permission === 'granted') {
-          new Notification(`PayPulse Reminder: ${bill.providerName}`, {
-            body: `Your bill of ${formatCurrency(bill.amount)} is due on ${formatDate(bill.dueDate)}. Click to pay.`,
-            icon: '/favicon.svg'
-          });
-        }
-      });
-    }
-    handleSendTestNotification();
-  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">

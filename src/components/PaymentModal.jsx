@@ -26,8 +26,44 @@ export const PaymentModal = ({
   const [selectedBank, setSelectedBank] = useState('HDFC Bank');
   const [isProcessing, setIsProcessing] = useState(false);
 
-  if (!isOpen || !bill) return null;
+  const triggerConfetti = () => {
+    try {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+    } catch {
+      // safe fallback
+    }
+  };
 
+  const handleProcessPayment = (e) => {
+    e.preventDefault();
+    setIsProcessing(true);
+
+    setTimeout(() => {
+      setIsProcessing(false);
+      triggerConfetti();
+      const paymentDetails = {
+        transactionId: `TXN-PAY-${Math.floor(100000000 + Math.random() * 900000000)}`,
+        paidAt: new Date().toISOString(),
+        paymentMethod: paymentMethod.toUpperCase(),
+        amount: bill.amount,
+        billId: bill.id,
+        providerName: bill.providerName,
+        consumerId: bill.consumerId,
+        category: bill.category
+      };
+      onPaymentSuccess(bill.id, paymentDetails);
+    }, 1200);
+  };
+
+  if (!isOpen || !bill) return null;
+<<<<<<< HEAD:src/components/PaymentModal.jsx
+
+=======
+>>>>>>> 44938e4 (chore: fix hook ordering in ReminderModal, remove dead code):client/src/components/PaymentModal.jsx
   const triggerConfetti = () => {
     try {
       confetti({
