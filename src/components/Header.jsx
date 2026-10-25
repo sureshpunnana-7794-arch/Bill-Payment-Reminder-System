@@ -7,7 +7,9 @@ import {
   Zap,
   BarChart3,
   Layers,
-  LayoutDashboard
+  LayoutDashboard,
+  User,
+  LogOut
 } from 'lucide-react';
 
 export const Header = ({
@@ -17,7 +19,10 @@ export const Header = ({
   onOpenAddModal,
   onOpenNotifications,
   currentView,
-  setCurrentView
+  setCurrentView,
+  currentUser,
+  onOpenAuthModal,
+  onLogout
 }) => {
   return (
     <header className="sticky top-0 z-40 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/80">
@@ -88,11 +93,42 @@ export const Header = ({
           </nav>
 
           {/* Right Action Suite */}
-          <div className="flex items-center gap-2.5 sm:gap-3">
+          <div className="flex items-center gap-2 sm:gap-2.5">
+            {/* User Account / Auth Button */}
+            {currentUser ? (
+              <div className="flex items-center gap-1 bg-slate-900/80 border border-slate-700/80 rounded-xl p-1 pr-2">
+                <button
+                  onClick={onOpenAuthModal}
+                  className="flex items-center gap-1.5 px-2 py-1 text-xs text-slate-300 hover:text-white transition cursor-pointer"
+                  title="Account Profile"
+                >
+                  <div className="w-6 h-6 rounded-full bg-indigo-600/30 border border-indigo-500/50 flex items-center justify-center text-indigo-300 font-bold text-[10px]">
+                    {currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U'}
+                  </div>
+                  <span className="hidden lg:inline font-medium max-w-[100px] truncate">{currentUser.name}</span>
+                </button>
+                <button
+                  onClick={onLogout}
+                  className="p-1 text-slate-400 hover:text-rose-400 transition cursor-pointer"
+                  title="Sign Out"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={onOpenAuthModal}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-medium text-slate-300 hover:text-white transition cursor-pointer"
+              >
+                <User className="w-3.5 h-3.5 text-indigo-400" />
+                <span>Sign In</span>
+              </button>
+            )}
+
             {/* Connected Number Pill */}
             <button
               onClick={onOpenPhoneModal}
-              className="group flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800/90 border border-slate-700/80 hover:border-indigo-500/50 transition cursor-pointer text-left shadow-sm"
+              className="group flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800/90 border border-slate-700/80 hover:border-indigo-500/50 transition cursor-pointer text-left shadow-sm"
               title="Click to change or connect number"
             >
               <div className="relative">
@@ -100,14 +136,14 @@ export const Header = ({
                 <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               </div>
               <div className="hidden sm:block">
-                <div className="text-[10px] text-slate-400 font-semibold uppercase leading-tight flex items-center gap-1">
-                  <span>Linked Number</span>
+                <div className="text-[10px] text-slate-400 font-semibold uppercase leading-tight">
+                  Linked SIM
                 </div>
                 <div className="text-xs font-bold text-white font-mono leading-tight">
                   {currentPhone?.formatted || currentPhone?.phone || 'Connect'}
                 </div>
               </div>
-              <ChevronDown className="w-3.5 h-3.5 text-slate-400 group-hover:text-white transition" />
+              <ChevronDown className="w-3 h-3 text-slate-400 group-hover:text-white transition" />
             </button>
 
             {/* Notification Bell */}
