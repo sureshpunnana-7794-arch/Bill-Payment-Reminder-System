@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AlertTriangle, RefreshCw, Trash2, Home, Terminal } from 'lucide-react';
+import { AlertTriangle, RefreshCw, Trash2, Terminal } from 'lucide-react';
 
 export class ErrorBoundary extends Component {
   constructor(props) {

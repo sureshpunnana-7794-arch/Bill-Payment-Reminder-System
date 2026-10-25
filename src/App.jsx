@@ -273,7 +273,13 @@ export function App() {
           savedBill = res.data;
         }
       } catch (err) {
-        console.warn('Server create bill failed, local saved:', err);
+        console.error('Server create bill failed:', err);
+        showToast(
+          'Database Error',
+          err.message || 'Failed to save bill to MongoDB database. Operation aborted.',
+          'error'
+        );
+        return;
       }
     }
 
@@ -294,7 +300,7 @@ export function App() {
 
     showToast(
       'Bill Connected & Protected',
-      `${savedBill.providerName} (₹${savedBill.amount}) is now scheduled for proactive reminders.`
+      `${savedBill.providerName} (₹${savedBill.amount}) is now saved to MongoDB and scheduled for proactive reminders.`
     );
   };
 
@@ -312,7 +318,13 @@ export function App() {
           paymentDetails
         });
       } catch (err) {
-        console.warn('Server payment create failed:', err);
+        console.error('Server payment create failed:', err);
+        showToast(
+          'Payment Sync Failed',
+          err.message || 'Payment recorded, but could not be logged to MongoDB.',
+          'error'
+        );
+        return;
       }
     }
 
@@ -374,7 +386,13 @@ export function App() {
       try {
         await api.bills.updateStatus(target._id, nextPaid);
       } catch (err) {
-        console.warn('Server status update failed:', err);
+        console.error('Server status update failed:', err);
+        showToast(
+          'Database Error',
+          err.message || 'Failed to update bill status in MongoDB.',
+          'error'
+        );
+        return;
       }
     }
 
@@ -409,7 +427,13 @@ export function App() {
       try {
         await api.bills.update(target._id, { autoRemind: updatedState });
       } catch (err) {
-        console.warn('Server reminder update failed:', err);
+        console.error('Server reminder update failed:', err);
+        showToast(
+          'Database Error',
+          err.message || 'Failed to update reminder settings in MongoDB.',
+          'error'
+        );
+        return;
       }
     }
 
@@ -441,7 +465,13 @@ export function App() {
           reminderChannels
         });
       } catch (err) {
-        console.warn('Server reminder save failed:', err);
+        console.error('Server reminder save failed:', err);
+        showToast(
+          'Database Error',
+          err.message || 'Failed to save reminder channels in MongoDB.',
+          'error'
+        );
+        return;
       }
     }
 
@@ -465,7 +495,13 @@ export function App() {
       try {
         await api.bills.delete(billToDelete._id);
       } catch (err) {
-        console.warn('Server delete bill failed:', err);
+        console.error('Server delete bill failed:', err);
+        showToast(
+          'Database Error',
+          err.message || 'Failed to delete bill from MongoDB database.',
+          'error'
+        );
+        return;
       }
     }
 
@@ -473,7 +509,7 @@ export function App() {
 
     showToast(
       'Bill Removed',
-      `${billToDelete?.providerName || 'Bill'} removed from your account.`,
+      `${billToDelete?.providerName || 'Bill'} removed from MongoDB and your account.`,
       'info'
     );
   };

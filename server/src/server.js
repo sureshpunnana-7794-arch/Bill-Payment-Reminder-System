@@ -16,8 +16,8 @@ const startServer = async () => {
       logger.error('Database connection failed on startup. Server will start in degraded mode with health status 503.');
     }
 
-    server = app.listen(env.port, () => {
-      logger.info(`⚡ PayPulse Server running at http://localhost:${env.port} [${env.nodeEnv}]`);
+    server = app.listen(env.port, '0.0.0.0', () => {
+      logger.info(`⚡ PayPulse Server running at http://0.0.0.0:${env.port} [${env.nodeEnv}]`);
       logger.info(`Health check available at http://localhost:${env.port}/api/health`);
     });
   } catch (error) {
