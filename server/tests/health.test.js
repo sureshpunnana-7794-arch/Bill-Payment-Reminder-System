@@ -8,8 +8,9 @@ describe('GET /api/health', () => {
 
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
+    expect(res.body.api).toBe('running');
+    expect(res.body.database).toBe('connected');
     expect(res.body.status).toBe('healthy');
-    expect(res.body.database.status).toBe('connected');
     expect(res.body).toHaveProperty('uptime');
     expect(res.body).toHaveProperty('timestamp');
   });

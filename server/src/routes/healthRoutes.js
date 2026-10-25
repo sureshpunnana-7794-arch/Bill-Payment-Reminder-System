@@ -9,11 +9,12 @@ router.get('/', (req, res) => {
 
   return res.status(statusCode).json({
     success: dbConnected,
+    api: 'running',
+    database: dbConnected ? 'connected' : 'disconnected',
     status: dbConnected ? 'healthy' : 'degraded',
-    message: dbConnected ? 'PayPulse API and database are fully operational.' : 'Database connectivity issue.',
-    database: {
-      status: dbConnected ? 'connected' : 'disconnected'
-    },
+    message: dbConnected
+      ? 'PayPulse API and database are fully operational.'
+      : 'Database connectivity issue.',
     uptime: Math.floor(process.uptime()),
     timestamp: new Date().toISOString(),
     version: '1.0.0'
