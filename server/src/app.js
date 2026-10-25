@@ -3,6 +3,9 @@ import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
 import { env } from './config/env.js';
 import { apiLimiter } from './middleware/rateLimiter.js';
 import { errorHandler } from './middleware/errorHandler.js';
@@ -15,11 +18,16 @@ import paymentRoutes from './routes/paymentRoutes.js';
 import reminderRoutes from './routes/reminderRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const distPath = path.resolve(__dirname, '../../dist');
+
 export const createApp = () => {
   const app = express();
 
   // HTTP Security Headers
   app.use(helmet({
+    contentSecurityPolicy: false,
     crossOriginResourcePolicy: { policy: 'cross-origin' }
   }));
 
@@ -68,7 +76,19 @@ export const createApp = () => {
   app.use('/api/reminders', reminderRoutes);
   app.use('/api/notifications', notificationRoutes);
 
-  // 404 Route Handler
+  // Serve static assets from dist if available (production full-stack mode)
+  if (fs.existsSync(distPath)) {
+    app.use(express.static(distPath));
+
+    app.use((req, res, next) => {
+      if (req.method === 'GET' && !req.path.startsWith('/api')) {
+        return res.sendFile(path.join(distPath, 'index.html'));
+      }
+      next();
+    });
+  }
+
+  // 404 Route Handler for unmatched endpoints
   app.use((req, res) => {
     res.status(404).json({
       success: false,

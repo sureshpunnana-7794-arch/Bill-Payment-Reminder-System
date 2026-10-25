@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "start": "node server/src/server.js",
     "dev": "vite --host 0.0.0.0 --port 3000",
     "server": "node server/src/server.js",
     "server:dev": "node --watch server/src/server.js",
