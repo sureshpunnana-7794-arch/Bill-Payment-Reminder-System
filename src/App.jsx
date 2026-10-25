@@ -27,7 +27,12 @@ export function App() {
   const [currentPhone, setCurrentPhone] = useState(() => {
     try {
       const saved = localStorage.getItem('paypulse_phone');
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed === 'object' && parsed.phone) {
+          return parsed;
+        }
+      }
     } catch {
       // safe fallback
     }
@@ -37,19 +42,30 @@ export function App() {
   // Bills collection (initialized from localStorage, then synced with MongoDB)
   const [bills, setBills] = useState(() => {
     try {
-      const saved = localStorage.getItem(`paypulse_bills_${currentPhone?.phone || 'default'}`);
-      if (saved) return JSON.parse(saved);
+      const key = `paypulse_bills_${currentPhone?.phone || 'default'}`;
+      const saved = localStorage.getItem(key);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
     } catch {
       // safe fallback
     }
-    return currentPhone?.bills || PRESET_PROFILES[0].bills;
+    return Array.isArray(currentPhone?.bills) ? currentPhone.bills : PRESET_PROFILES[0].bills;
   });
 
   // Notifications
   const [notifications, setNotifications] = useState(() => {
     try {
       const saved = localStorage.getItem('paypulse_notifications');
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          return parsed;
+        }
+      }
     } catch {
       // safe fallback
     }
@@ -534,7 +550,8 @@ export function App() {
     showToast('Signed Out', 'You have been signed out safely.', 'info');
   };
 
-  const unreadNotifCount = notifications.filter((n) => !n.read).length;
+  const safeBills = Array.isArray(bills) ? bills : [];
+  const unreadNotifCount = Array.isArray(notifications) ? notifications.filter((n) => !n.read).length : 0;
 
   return (
     <div className="min-h-screen bg-[#0b0f19] text-slate-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
@@ -600,7 +617,7 @@ export function App() {
 
         {/* Urgent Reminder Banner */}
         <UrgentReminderBanner
-          bills={bills}
+          bills={safeBills}
           onPayBill={(bill) => setPaymentBill(bill)}
           onOpenReminder={(bill) => setReminderBill(bill)}
           onTestWhatsApp={handleOpenWhatsAppTest}
@@ -609,7 +626,7 @@ export function App() {
         {/* View Switcher: Dashboard vs Bills vs Analytics */}
         {currentView === 'dashboard' ? (
           <Dashboard
-            bills={bills}
+            bills={safeBills}
             onPay={(bill) => setPaymentBill(bill)}
             onOpenReminder={(bill) => setReminderBill(bill)}
             onToggleAutoRemind={handleToggleAutoRemind}
@@ -622,16 +639,16 @@ export function App() {
             connectedPhone={currentPhone}
           />
         ) : currentView === 'analytics' ? (
-          <AnalyticsView bills={bills} />
+          <AnalyticsView bills={safeBills} />
         ) : (
           <>
             <StatsOverview
-              bills={bills}
+              bills={safeBills}
               currentPhone={currentPhone}
               onOpenPhoneModal={() => setIsPhoneModalOpen(true)}
             />
             <BillList
-              bills={bills}
+              bills={safeBills}
               onPay={(bill) => setPaymentBill(bill)}
               onOpenReminder={(bill) => setReminderBill(bill)}
               onToggleAutoRemind={handleToggleAutoRemind}

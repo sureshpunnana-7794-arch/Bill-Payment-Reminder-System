@@ -3,7 +3,8 @@
  * Handles base URL, auth token injection, automatic refresh on 401, error normalization, and offline detection.
  */
 
-const BASE_URL = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '') + '/api';
+const rawApiUrl = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
+const BASE_URL = rawApiUrl.endsWith('/api') ? rawApiUrl : `${rawApiUrl}/api`;
 
 let inMemoryToken = null;
 let isRefreshing = false;
