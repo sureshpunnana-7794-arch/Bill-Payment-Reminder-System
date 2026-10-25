@@ -1,5 +1,13 @@
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import dns from 'dns';
+
+// Fix for Windows / ISP DNS servers that fail on SRV record resolution
+try {
+  dns.setServers(['8.8.8.8', '1.1.1.1']);
+} catch {
+  // safe fallback
+}
 
 dotenv.config();
 
@@ -26,6 +34,7 @@ try {
   console.error('❌ Connection failed:', err.message);
   if (err.message.includes('bad auth') || err.message.includes('Authentication failed')) {
     console.error('👉 Hint: Check your database username and password in the connection string.');
+    console.error('👉 If your password has special characters like "@", replace "@" with "%40".');
   } else if (err.message.includes('ETIMEDOUT') || err.message.includes('Could not connect') || err.message.includes('querySrv')) {
     console.error('👉 Hint: Make sure Network Access in Atlas is set to allow access from anywhere (0.0.0.0/0).');
   }

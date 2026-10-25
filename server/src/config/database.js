@@ -1,6 +1,14 @@
 import mongoose from 'mongoose';
+import dns from 'dns';
 import { env } from './env.js';
 import { logger } from '../utils/logger.js';
+
+// Fallback to Google & Cloudflare DNS for environments where ISP router DNS truncates SRV records
+try {
+  dns.setServers(['8.8.8.8', '1.1.1.1']);
+} catch {
+  // safe fallback
+}
 
 let isConnected = false;
 
