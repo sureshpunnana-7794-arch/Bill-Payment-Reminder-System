@@ -9,9 +9,9 @@ export const connectDatabase = async () => {
   try {
     let connectionUri = env.mongoUri;
 
-    // If URI is missing, has template placeholders, or failed, fallback to memory server
+    // Fallback to Mongo Memory Server if URI is missing or invalid
     if (!connectionUri || connectionUri.includes('<') || connectionUri.includes('replace_with')) {
-      logger.info('No valid database connection string found. Starting MongoDB Memory Server...');
+      logger.info('No valid MONGODB_URI found. Starting MongoDB Memory Server...');
       mongoMemoryServer = await MongoMemoryServer.create();
       connectionUri = mongoMemoryServer.getUri();
     }
@@ -19,7 +19,7 @@ export const connectDatabase = async () => {
     const conn = await mongoose.connect(connectionUri);
     logger.info(`MongoDB Connected successfully: ${conn.connection.host}`);
   } catch (error) {
-    logger.warn(`Primary database connection failed (${error.message}). Starting MongoDB Memory Server fallback...`);
+    logger.warn(`Primary database connection failed (${error.message}). Starting Mongo Memory Server fallback...`);
     try {
       mongoMemoryServer = await MongoMemoryServer.create();
       const fallbackUri = mongoMemoryServer.getUri();
@@ -37,4 +37,9 @@ export const disconnectDatabase = async () => {
   if (mongoMemoryServer) {
     await mongoMemoryServer.stop();
   }
+};
+
+// Required by healthRoutes.js to check DB status
+export const isDatabaseConnected = () => {
+  return mongoose.connection.readyState === 1;
 };
